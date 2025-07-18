@@ -14,10 +14,10 @@ pipeline {
         }
         stage('Deploy to S3') {
             steps {
-                sh '''
-                    aws s3 ls
-                    aws s3 cp app.txt s3://curatedbts3/
-                   '''
+              sh '''
+                /usr/local/bin/aws s3 ls
+                /usr/local/bin/aws s3 cp app.txt s3://curatedbts3/
+              '''
             }
         }
     }
