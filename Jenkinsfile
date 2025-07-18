@@ -19,7 +19,7 @@ pipeline {
                 ]) {
                     sh '''
                         aws s3 ls
-                        aws s3 cp app.txt s3://curatedbts3/
+                        aws s3 cp Hey.txt s3://curatedbts3/
                     '''
                 }
             }
