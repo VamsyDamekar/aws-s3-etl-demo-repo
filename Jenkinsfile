@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        PATH = "/usr/local/bin:${env.PATH}"
+    }
+
     stages {
         stage('Build') {
             steps {
@@ -10,13 +14,12 @@ pipeline {
 
         stage('Deploy to S3') {
             steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-creds'
-                ]]) {
+                withCredentials([
+                    [$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']
+                ]) {
                     sh '''
-                        /usr/local/bin/aws s3 ls
-                        /usr/local/bin/aws s3 cp app.txt s3://curatedbts3/
+                        aws s3 ls
+                        aws s3 cp app.txt s3://curatedbts3/
                     '''
                 }
             }
