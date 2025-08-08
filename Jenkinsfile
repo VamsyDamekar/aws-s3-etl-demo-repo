@@ -2,25 +2,26 @@ pipeline {
     agent any
 
     environment {
-    PATH+EXTRA = "/opt/homebrew/bin:/usr/local/bin"
-}
+        PATH+EXTRA="/opt/homebrew/bin:/usr/local/bin"
+    }
 
     stages {
+        stage('Checkout Code') {
+            steps { checkout scm }
+        }
+
         stage('Verify Tools') {
             steps {
                 sh '''
-                    echo "PATH=$PATH"
-                    which terraform || echo "terraform not found"
-                    ${TERRAFORM_PATH} -version || echo "terraform command failed"
-                    which python3 || echo "python3 not found"
-                    python3 --version || echo "python3 command failed"
+                  echo "PATH=$PATH"
+                  which sh || echo "sh not found"
+                  which terraform || echo "terraform not found"
+                  terraform -version || echo "terraform command failed"
+                  which aws || echo "aws not found"
+                  aws --version || echo "aws command failed"
+                  which python3 || echo "python3 not found"
+                  python3 --version || echo "python3 command failed"
                 '''
-            }
-        }
-
-        stage('Checkout Code') {
-            steps {
-                checkout scm
             }
         }
 
@@ -31,10 +32,11 @@ pipeline {
                     credentialsId: 'aws-creds'
                 ]]) {
                     sh '''
-                        echo "Initializing Terraform..."
-                        ${TERRAFORM_PATH} init
-                        echo "Applying Terraform..."
-                        ${TERRAFORM_PATH} apply -auto-approve
+                      set -e
+                      echo "Initializing Terraform..."
+                      terraform init -input=false
+                      echo "Applying Terraform..."
+                      terraform apply -auto-approve -input=false
                     '''
                 }
             }
@@ -43,8 +45,8 @@ pipeline {
         stage('Run Python ETL Script') {
             steps {
                 sh '''
-                    echo "Running ETL Python script..."
-                    python3 my_script.py
+                  echo "Running ETL Python script..."
+                  python3 my_script.py
                 '''
             }
         }
@@ -56,8 +58,8 @@ pipeline {
                     credentialsId: 'aws-creds'
                 ]]) {
                     sh '''
-                        echo "Uploading transformed file to S3..."
-                        aws s3 cp output/transformed.csv s3://curatedbts3/
+                      echo "Uploading transformed file to S3..."
+                      aws s3 cp output/transformed.csv s3://curatedbts3/
                     '''
                 }
             }
@@ -65,11 +67,7 @@ pipeline {
     }
 
     post {
-        success {
-            echo 'Pipeline completed successfully ✅'
-        }
-        failure {
-            echo 'Pipeline failed ❌'
-        }
+        success { echo 'Pipeline completed successfully ✅' }
+        failure { echo 'Pipeline failed ❌' }
     }
 }
