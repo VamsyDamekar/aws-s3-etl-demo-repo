@@ -2,23 +2,13 @@ pipeline {
     agent any
 
     environment {
-        PATH = "/usr/local/bin:${env.PATH}" 
+        PATH+EXTRA = "/usr/local/bin:/opt/homebrew/bin"
     }
 
     stages {
         stage('Checkout Code') {
             steps {
                 checkout scm
-            }
-        }
-
-        stage('Check Environment') {
-            steps {
-                sh '''
-                    echo "PATH is: $PATH"
-                    which terraform || echo "terraform not found"
-                    terraform -version || echo "terraform command failed"
-                '''
             }
         }
 
@@ -30,9 +20,9 @@ pipeline {
                 ]]) {
                     sh '''
                         echo "Initializing Terraform..."
-                        /opt/homebrew/bin/terraform init
+                        terraform init
                         echo "Applying Terraform..."
-                        /opt/homebrew/bin/terraform apply -auto-approve
+                        terraform apply -auto-approve
                     '''
                 }
             }
