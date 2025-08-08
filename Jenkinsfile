@@ -6,6 +6,20 @@ pipeline {
     }
 
     stages {
+        stage('Verify Environment') {
+            steps {
+                sh '''
+                    echo "PATH is: $PATH"
+                    which terraform || echo "terraform not found"
+                    terraform -version || echo "terraform version command failed"
+                    which python3 || echo "python3 not found"
+                    python3 --version || echo "python3 version command failed"
+                    which aws || echo "aws cli not found"
+                    aws --version || echo "aws version command failed"
+                '''
+            }
+        }
+
         stage('Checkout Code') {
             steps {
                 checkout scm
