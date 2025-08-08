@@ -12,6 +12,14 @@ pipeline {
             }
         }
 
+        stage('Verify Terraform') {
+            steps {
+                sh 'echo "Terraform path:"'
+                sh 'which terraform || echo "terraform not found"'
+                sh 'terraform -version || echo "terraform command failed"'
+            }
+        }
+
         stage('Terraform Init & Apply') {
             steps {
                 withCredentials([[
