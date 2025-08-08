@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        PATH = "/opt/homebrew/bin:${env.PATH}" 
+        PATH = "/usr/local/bin:${env.PATH}" 
     }
 
     stages {
@@ -20,9 +20,9 @@ pipeline {
                 ]]) {
                     sh '''
                         echo "Initializing Terraform..."
-                        terraform init
+                        /opt/homebrew/bin/terraform init
                         echo "Applying Terraform..."
-                        terraform apply -auto-approve
+                        /opt/homebrew/bin/terraform apply -auto-approve
                     '''
                 }
             }
