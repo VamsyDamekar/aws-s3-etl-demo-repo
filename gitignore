@@ -1,0 +1,15 @@
+# Ignore Terraform local files and folders
+.terraform/
+infra/.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfplan
+
+# Python cache and environment files (if any)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+.envrc
