@@ -1,9 +1,11 @@
 pipeline {
     agent any
 
-    environment {
-        PATH+EXTRA="/opt/homebrew/bin:/usr/local/bin"
+environment {
+        PATH = "/usr/local/bin:/opt/homebrew/bin:/bin:/usr/bin:${env.PATH}"
+        TERRAFORM_PATH = "/opt/homebrew/bin/terraform"
     }
+
 
     stages {
         stage('Checkout Code') {
