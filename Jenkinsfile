@@ -2,20 +2,19 @@ pipeline {
     agent any
 
     environment {
-        PATH+EXTRA = "/usr/local/bin:/opt/homebrew/bin"
+        PATH+EXTRA="/usr/local/bin:/opt/homebrew/bin"
+        TERRAFORM_PATH="/opt/homebrew/bin/terraform" // adjust if needed
     }
 
     stages {
-        stage('Verify Environment') {
+        stage('Verify Tools') {
             steps {
                 sh '''
-                    echo "PATH is: $PATH"
+                    echo "PATH=$PATH"
                     which terraform || echo "terraform not found"
-                    terraform -version || echo "terraform version command failed"
+                    ${TERRAFORM_PATH} -version || echo "terraform command failed"
                     which python3 || echo "python3 not found"
-                    python3 --version || echo "python3 version command failed"
-                    which aws || echo "aws cli not found"
-                    aws --version || echo "aws version command failed"
+                    python3 --version || echo "python3 command failed"
                 '''
             }
         }
@@ -34,9 +33,9 @@ pipeline {
                 ]]) {
                     sh '''
                         echo "Initializing Terraform..."
-                        terraform init
+                        ${TERRAFORM_PATH} init
                         echo "Applying Terraform..."
-                        terraform apply -auto-approve
+                        ${TERRAFORM_PATH} apply -auto-approve
                     '''
                 }
             }
