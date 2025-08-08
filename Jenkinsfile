@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        PATH = "/usr/local/bin:${env.PATH}" 
+        PATH = "/opt/homebrew/bin:/usr/local/bin:${env.PATH}"
     }
 
     stages {
@@ -14,7 +14,7 @@ pipeline {
 
         stage('Verify Terraform') {
             steps {
-                sh 'echo "Terraform path:"'
+                sh 'echo "Terraform location:"'
                 sh 'which terraform || echo "terraform not found"'
                 sh 'terraform -version || echo "terraform command failed"'
             }
@@ -28,9 +28,9 @@ pipeline {
                 ]]) {
                     sh '''
                         echo "Initializing Terraform..."
-                        /opt/homebrew/bin/terraform init
+                        terraform init
                         echo "Applying Terraform..."
-                        /opt/homebrew/bin/terraform apply -auto-approve
+                        terraform apply -auto-approve
                     '''
                 }
             }
