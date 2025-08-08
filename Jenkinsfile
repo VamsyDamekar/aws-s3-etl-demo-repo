@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     environment {
-        PATH+EXTRA="/usr/local/bin:/opt/homebrew/bin"
-        TERRAFORM_PATH="/opt/homebrew/bin/terraform" // adjust if needed
-    }
+    PATH+EXTRA = "/opt/homebrew/bin:/usr/local/bin"
+}
 
     stages {
         stage('Verify Tools') {
